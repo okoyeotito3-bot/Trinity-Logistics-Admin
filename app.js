@@ -27,7 +27,6 @@ const successAlert    = document.getElementById('success-alert');
 const generatedIdDisplay = document.getElementById('generated-id-display');
 const copyIdBtn       = document.getElementById('copy-id-btn');
 const searchInput     = document.getElementById('search-input');
-const navItems        = document.querySelectorAll('.nav-item');
 const sectionTitle    = document.getElementById('section-title');
 const sectionSub      = document.getElementById('section-sub');
 
@@ -74,24 +73,43 @@ logoutBtn.addEventListener('click', () => {
     registerForm.reset();
 });
 
-// ── NAV SWITCHING ────────────────────────────────────────────────────────────
-navItems.forEach(item => {
+// ── NAV SWITCHING (desktop + mobile) ─────────────────────────────────────
+const allNavItems = document.querySelectorAll('.nav-item, .mobile-nav-item[data-section]');
+
+function switchSection(section) {
+    // Update active state on all nav items
+    document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll(`[data-section="${section}"]`).forEach(n => n.classList.add('active'));
+
+    // Show correct section
+    document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(`section-${section}`).classList.remove('hidden');
+
+    if (section === 'register') {
+        sectionTitle.textContent = 'Register Shipment';
+        sectionSub.textContent   = 'Create a new tracked package';
+    } else if (section === 'shipments') {
+        sectionTitle.textContent = 'All Shipments';
+        sectionSub.textContent   = 'View, update, or delete shipments';
+        loadShipments();
+    }
+
+    // Scroll to top on mobile
+    document.querySelector('.main-area')?.scrollTo(0, 0);
+}
+
+allNavItems.forEach(item => {
     item.addEventListener('click', (e) => {
         e.preventDefault();
-        navItems.forEach(n => n.classList.remove('active'));
-        item.classList.add('active');
-        const section = item.dataset.section;
-        document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
-        document.getElementById(`section-${section}`).classList.remove('hidden');
-        if (section === 'register') {
-            sectionTitle.textContent = 'Register Shipment';
-            sectionSub.textContent   = 'Create a new tracked package';
-        } else if (section === 'shipments') {
-            sectionTitle.textContent = 'All Shipments';
-            sectionSub.textContent   = 'View, update, or delete shipments';
-            loadShipments();
-        }
+        switchSection(item.dataset.section);
     });
+});
+
+// Mobile logout button
+document.getElementById('mobile-logout-btn')?.addEventListener('click', () => {
+    signOut(auth);
+    successAlert.classList.add('hidden');
+    registerForm.reset();
 });
 
 // ── REGISTER PACKAGE ─────────────────────────────────────────────────────────
