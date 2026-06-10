@@ -709,15 +709,129 @@ body.tracking-page {
     font-size: 0.78rem;
 }
 
+/* ── MOBILE BOTTOM NAV BAR ───────────────────────────────────────────────── */
+.mobile-nav {
+    display: none;
+}
+
 /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    .dashboard { grid-template-columns: 1fr; }
+
+    /* Stack layout vertically */
+    .dashboard {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    /* Hide desktop sidebar */
     .sidebar { display: none; }
-    .form-grid, .modal-fields { grid-template-columns: 1fr; }
+
+    /* Main area takes full width, scrollable */
+    .main-area {
+        height: 100vh;
+        overflow-y: auto;
+        padding-bottom: 72px; /* space for bottom nav */
+    }
+
+    /* Top bar stacks nicely */
+    .top-bar {
+        padding: 14px 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .top-bar h2 { font-size: 1.05rem; }
+    .top-bar .btn-outline { font-size: 0.78rem; padding: 7px 12px; }
+
+    /* Content padding */
+    .content-section { padding: 16px; }
+
+    /* Forms go single column */
+    .form-grid { grid-template-columns: 1fr; }
     .span-2 { grid-column: span 1; }
+
+    /* Submit button full width */
+    #submit-luggage-btn { max-width: 100%; }
+
+    /* Card padding tighter */
+    .card { padding: 18px 16px; }
+    .card-head { margin-bottom: 18px; }
+
+    /* Form section labels smaller */
+    .form-section-label { font-size: 0.72rem; margin: 20px 0 12px; }
+
+    /* Table: make it horizontally scrollable */
+    #shipments-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .shipments-table { min-width: 580px; font-size: 0.78rem; }
+    .shipments-table th,
+    .shipments-table td { padding: 10px 10px; }
+
+    /* Search input full width */
+    .search-wrap input { width: 100%; }
+    .search-wrap { width: 100%; }
+
+    /* Success banner wraps */
+    .success-banner { flex-wrap: wrap; }
+    .success-banner strong { font-size: 1rem; }
+
+    /* Modals full screen on mobile */
+    .modal-overlay { padding: 0; align-items: flex-end; }
+    .modal-card {
+        max-width: 100%;
+        width: 100%;
+        border-radius: 20px 20px 0 0;
+        max-height: 92vh;
+    }
+    .modal-fields { grid-template-columns: 1fr; }
+    .modal-fields .span-2 { grid-column: span 1; }
+    .modal-actions { flex-direction: column-reverse; gap: 8px; }
+    .modal-actions .btn-outline,
+    .modal-actions .btn-primary,
+    .modal-actions .btn-danger { width: 100%; justify-content: center; }
+
+    /* Tracking page grid */
     .track-grid { grid-template-columns: 1fr; }
     .track-input-row { flex-direction: column; }
     .track-input-row .btn-primary { width: 100%; }
-    .content-section { padding: 20px 16px; }
-    .top-bar { padding: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+
+    /* ── MOBILE BOTTOM NAV ─────────────────────────────────────────────────── */
+    .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        z-index: 50;
+        padding: 0;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+    }
+
+    .mobile-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 10px 8px 12px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 0.65rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        transition: color 0.15s;
+    }
+    .mobile-nav-item i { font-size: 1.1rem; }
+    .mobile-nav-item.active { color: var(--accent); }
+    .mobile-nav-item.nav-logout { color: var(--red); }
+    .mobile-nav-item.nav-logout:hover { color: #dc2626; }
 }
