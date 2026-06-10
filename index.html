@@ -3,90 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trinity Logistics | Admin Dashboard</title>
+    <title>Trinity Logistics | Admin</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="auth-container" class="auth-box">
-        <h2><i class="fa-solid fa-shield-halved"></i> Trinity Admin</h2>
-        <p>Sign in to manage shipments and tracking data</p>
-        <div class="input-group">
-            <label>Admin Email</label>
-            <input type="email" id="admin-email" placeholder="admin@trinity.com">
+    <!-- AUTH SCREEN -->
+    <div id="auth-container" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <span class="logo-icon"><i class="fa-solid fa-truck-fast"></i></span>
+                <h1>Trinity<span class="accent">.</span></h1>
+            </div>
+            <p class="auth-sub">Admin Operations Portal</p>
+            <div class="field-group">
+                <label>Email</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="admin-email" placeholder="admin@trinitylogistics.com" autocomplete="username">
+                </div>
+            </div>
+            <div class="field-group">
+                <label>Password</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="admin-password" placeholder="••••••••" autocomplete="current-password">
+                </div>
+            </div>
+            <button id="login-btn" class="btn-primary">
+                <span>Sign In</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <p id="auth-error" class="error-msg hidden"></p>
         </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="admin-password" placeholder="••••••••">
-        </div>
-        <button id="login-btn"><i class="fa-solid fa-right-to-bracket"></i> Authenticate</button>
-        <p id="auth-error" class="error-msg hidden"></p>
     </div>
 
-    <div id="admin-panel" class="panel-container hidden">
+    <!-- ADMIN DASHBOARD -->
+    <div id="admin-panel" class="dashboard hidden">
+
         <aside class="sidebar">
-            <div class="brand">
-                <h3><i class="fa-solid fa-shield-halved"></i> Trinity Admin</h3>
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-truck-fast"></i>
+                <span>Trinity</span>
             </div>
-            <nav>
-                <a href="#" class="active"><i class="fa-solid fa-square-plus"></i> Register Luggage</a>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="register">
+                    <i class="fa-solid fa-plus-circle"></i> Register
+                </a>
+                <a href="#" class="nav-item" data-section="shipments">
+                    <i class="fa-solid fa-boxes-stacking"></i> Shipments
+                </a>
             </nav>
-            <button id="logout-btn" class="logout-btn"><i class="fa-solid fa-power-off"></i> Logout</button>
+            <div class="sidebar-footer">
+                <span id="user-display" class="user-label"></span>
+                <button id="logout-btn" class="btn-logout">
+                    <i class="fa-solid fa-power-off"></i> Logout
+                </button>
+            </div>
         </aside>
 
-        <main class="content-area">
-            <header class="main-header">
-                <h2>Luggage Intake & Registration</h2>
-                <span id="user-display">Logged in as Admin</span>
+        <main class="main-area">
+            <header class="top-bar">
+                <div>
+                    <h2 id="section-title">Register Shipment</h2>
+                    <p id="section-sub" class="top-sub">Create a new tracked package</p>
+                </div>
+                <a href="tracking.html" target="_blank" class="btn-outline">
+                    <i class="fa-solid fa-globe"></i> Customer Tracker
+                </a>
             </header>
 
-            <section class="form-card">
-                <h3><i class="fa-solid fa-box-open"></i> Log New Package</h3>
-                <p class="subtitle">Submitting this form auto-generates a global live Tracking ID.</p>
-                
-                <form id="register-form">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Luggage Description</label>
-                            <input type="text" id="lug-desc" placeholder="e.g., Black Samsonite Suitcase" required>
+            <!-- REGISTER SECTION -->
+            <section id="section-register" class="content-section">
+                <div class="card">
+                    <div class="card-head">
+                        <h3><i class="fa-solid fa-box-open"></i> Package & Courier</h3>
+                        <p>A unique Tracking ID is generated automatically on save.</p>
+                    </div>
+                    <form id="register-form">
+
+                        <!-- Package -->
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>Luggage Description</label>
+                                <input type="text" id="lug-desc" placeholder="e.g., Black Samsonite Suitcase" required>
+                            </div>
+                            <div class="form-field">
+                                <label>Weight</label>
+                                <input type="text" id="lug-weight" placeholder="e.g., 25kg" required>
+                            </div>
+                            <div class="form-field">
+                                <label>Courier Name</label>
+                                <input type="text" id="courier-name" placeholder="e.g., Chidi Okafor" required>
+                            </div>
+                            <div class="form-field">
+                                <label>Courier Phone</label>
+                                <input type="tel" id="courier-phone" placeholder="e.g., +234 812 345 6789" required>
+                            </div>
+                            <div class="form-field span-2">
+                                <label>Initial Status</label>
+                                <select id="lug-status">
+                                    <option value="Registered">Registered — Intake Warehouse</option>
+                                    <option value="In Transit">In Transit — On Route</option>
+                                    <option value="Delivered">Delivered — Handed Over</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Weight Details</label>
-                            <input type="text" id="lug-weight" placeholder="e.g., 25kg" required>
+
+                        <!-- Sender -->
+                        <div class="form-section-label"><i class="fa-solid fa-paper-plane"></i> Sender Details</div>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>Full Name</label>
+                                <input type="text" id="sender-name" placeholder="e.g., Emeka Nwosu">
+                            </div>
+                            <div class="form-field">
+                                <label>Phone Number</label>
+                                <input type="tel" id="sender-phone" placeholder="e.g., +234 803 000 0000">
+                            </div>
+                            <div class="form-field">
+                                <label>Email Address</label>
+                                <input type="email" id="sender-email" placeholder="e.g., emeka@email.com">
+                            </div>
+                            <div class="form-field">
+                                <label>Occupation</label>
+                                <input type="text" id="sender-occupation" placeholder="e.g., Engineer">
+                            </div>
+                            <div class="form-field span-2">
+                                <label>Home Address</label>
+                                <input type="text" id="sender-address" placeholder="e.g., 12 Lagos Road, Victoria Island">
+                            </div>
+                            <div class="form-field">
+                                <label>City</label>
+                                <input type="text" id="sender-city" placeholder="e.g., Lagos">
+                            </div>
+                            <div class="form-field">
+                                <label>Country</label>
+                                <input type="text" id="sender-country" placeholder="e.g., Nigeria">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Assigned Courier Name</label>
-                            <input type="text" id="courier-name" placeholder="e.g., Chidi Okafor" required>
+
+                        <!-- Recipient -->
+                        <div class="form-section-label"><i class="fa-solid fa-location-dot"></i> Recipient Details</div>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label>Full Name</label>
+                                <input type="text" id="recipient-name" placeholder="e.g., Amara Osei">
+                            </div>
+                            <div class="form-field">
+                                <label>Phone Number</label>
+                                <input type="tel" id="recipient-phone" placeholder="e.g., +44 7911 000000">
+                            </div>
+                            <div class="form-field">
+                                <label>Email Address</label>
+                                <input type="email" id="recipient-email" placeholder="e.g., amara@email.com">
+                            </div>
+                            <div class="form-field">
+                                <label>Occupation</label>
+                                <input type="text" id="recipient-occupation" placeholder="e.g., Nurse">
+                            </div>
+                            <div class="form-field span-2">
+                                <label>Home Address</label>
+                                <input type="text" id="recipient-address" placeholder="e.g., 5 Baker Street, London">
+                            </div>
+                            <div class="form-field">
+                                <label>City</label>
+                                <input type="text" id="recipient-city" placeholder="e.g., London">
+                            </div>
+                            <div class="form-field">
+                                <label>Country</label>
+                                <input type="text" id="recipient-country" placeholder="e.g., United Kingdom">
+                            </div>
+                            <div class="form-field span-2">
+                                <label>Relationship to Sender</label>
+                                <input type="text" id="recipient-relationship" placeholder="e.g., Sister, Business Partner, Friend">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Courier Phone Number</label>
-                            <input type="tel" id="courier-phone" placeholder="e.g., +234 812 345 6789" required>
+
+                        <button type="submit" class="btn-primary" id="submit-luggage-btn">
+                            <i class="fa-solid fa-plus"></i> Generate Tracking ID & Save
+                        </button>
+                    </form>
+
+                    <div id="success-alert" class="success-banner hidden">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div>
+                            <p>Shipment registered. Share this ID with the client:</p>
+                            <strong id="generated-id-display"></strong>
                         </div>
-                        <div class="form-group full-width">
-                            <label>Initial Status</label>
-                            <select id="lug-status">
-                                <option value="Registered" selected>Registered (Intake Warehouse)</option>
-                                <option value="In Transit">In Transit (On Route)</option>
-                                <option value="Delivered">Delivered (Handed Over)</option>
-                            </select>
+                        <button class="copy-btn" id="copy-id-btn" title="Copy ID">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SHIPMENTS SECTION -->
+            <section id="section-shipments" class="content-section hidden">
+                <div class="card">
+                    <div class="card-head">
+                        <h3><i class="fa-solid fa-boxes-stacking"></i> All Shipments</h3>
+                        <div class="search-wrap">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="search-input" placeholder="Search by ID, description, courier…">
                         </div>
                     </div>
-                    <button type="submit" id="submit-luggage-btn">
-                        <i class="fa-solid fa-plus"></i> Generate Tracking ID & Save
-                    </button>
-                </form>
-
-                <div id="success-alert" class="success-box hidden">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <div>
-                        <h4>Registration Complete!</h4>
-                        <p>Share this unique live Tracking ID with the client:</p>
-                        <strong id="generated-id-display">TRINITY-XXXXXX</strong>
+                    <div id="shipments-loading" class="loader-state">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Loading shipments…
+                    </div>
+                    <div id="shipments-empty" class="empty-state hidden">
+                        <i class="fa-solid fa-inbox"></i>
+                        <p>No shipments found.</p>
+                    </div>
+                    <div id="shipments-table-wrap" class="hidden">
+                        <table class="shipments-table">
+                            <thead>
+                                <tr>
+                                    <th>Tracking ID</th>
+                                    <th>Description</th>
+                                    <th>Sender</th>
+                                    <th>Recipient</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="shipments-tbody"></tbody>
+                        </table>
                     </div>
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-card modal-lg">
+            <div class="modal-head">
+                <h3><i class="fa-solid fa-pen-to-square"></i> Update Shipment</h3>
+                <button id="modal-close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="modal-tracking-id" class="modal-id"></p>
+
+            <div class="modal-body-scroll">
+                <!-- Package & Courier -->
+                <div class="form-section-label"><i class="fa-solid fa-box-open"></i> Package & Courier</div>
+                <div class="modal-fields">
+                    <div class="form-field">
+                        <label>Description</label>
+                        <input type="text" id="modal-desc">
+                    </div>
+                    <div class="form-field">
+                        <label>Weight</label>
+                        <input type="text" id="modal-weight">
+                    </div>
+                    <div class="form-field">
+                        <label>Courier Name</label>
+                        <input type="text" id="modal-courier-name">
+                    </div>
+                    <div class="form-field">
+                        <label>Courier Phone</label>
+                        <input type="tel" id="modal-courier-phone">
+                    </div>
+                    <div class="form-field span-2">
+                        <label>Status</label>
+                        <select id="modal-status">
+                            <option value="Registered">Registered — Intake Warehouse</option>
+                            <option value="In Transit">In Transit — On Route</option>
+                            <option value="Delivered">Delivered — Handed Over</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sender -->
+                <div class="form-section-label"><i class="fa-solid fa-paper-plane"></i> Sender Details</div>
+                <div class="modal-fields">
+                    <div class="form-field">
+                        <label>Full Name</label>
+                        <input type="text" id="modal-sender-name">
+                    </div>
+                    <div class="form-field">
+                        <label>Phone</label>
+                        <input type="tel" id="modal-sender-phone">
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" id="modal-sender-email">
+                    </div>
+                    <div class="form-field">
+                        <label>Occupation</label>
+                        <input type="text" id="modal-sender-occupation">
+                    </div>
+                    <div class="form-field span-2">
+                        <label>Address</label>
+                        <input type="text" id="modal-sender-address">
+                    </div>
+                    <div class="form-field">
+                        <label>City</label>
+                        <input type="text" id="modal-sender-city">
+                    </div>
+                    <div class="form-field">
+                        <label>Country</label>
+                        <input type="text" id="modal-sender-country">
+                    </div>
+                </div>
+
+                <!-- Recipient -->
+                <div class="form-section-label"><i class="fa-solid fa-location-dot"></i> Recipient Details</div>
+                <div class="modal-fields">
+                    <div class="form-field">
+                        <label>Full Name</label>
+                        <input type="text" id="modal-recipient-name">
+                    </div>
+                    <div class="form-field">
+                        <label>Phone</label>
+                        <input type="tel" id="modal-recipient-phone">
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" id="modal-recipient-email">
+                    </div>
+                    <div class="form-field">
+                        <label>Occupation</label>
+                        <input type="text" id="modal-recipient-occupation">
+                    </div>
+                    <div class="form-field span-2">
+                        <label>Address</label>
+                        <input type="text" id="modal-recipient-address">
+                    </div>
+                    <div class="form-field">
+                        <label>City</label>
+                        <input type="text" id="modal-recipient-city">
+                    </div>
+                    <div class="form-field">
+                        <label>Country</label>
+                        <input type="text" id="modal-recipient-country">
+                    </div>
+                    <div class="form-field span-2">
+                        <label>Relationship to Sender</label>
+                        <input type="text" id="modal-recipient-relationship">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn-outline">Cancel</button>
+                <button id="modal-save" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-card modal-sm">
+            <div class="modal-head">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> Delete Shipment</h3>
+                <button id="delete-modal-close" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="delete-warning">This will permanently delete <strong id="delete-id-label"></strong>. This cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="delete-cancel" class="btn-outline">Cancel</button>
+                <button id="delete-confirm" class="btn-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="app.js"></script>
